@@ -14,3 +14,9 @@ p1.personName="Harsh"
 print(p1)
 print(p1.personID)
 print(p1.personName)
+p2=Person()
+p1.personID=102
+p1.personName="Harshita"
+print(p1)
+print(p1.personID)
+print(p1.personName)

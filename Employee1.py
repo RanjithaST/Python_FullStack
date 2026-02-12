@@ -7,7 +7,7 @@ class Employee:
 e1=Employee()
 print(e1)
 print("***Invoked from class object***",Employee.companyName)
-print("***Invoked from class object***",e1.companyName)
+print("***Invoked from object***",e1.companyName)
 e1.companyName="Google" ##2nd way to create instance variable
 print("***Invoked from object***",e1.companyName)
 e1.salary=1000

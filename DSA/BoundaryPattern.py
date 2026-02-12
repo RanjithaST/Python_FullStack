@@ -230,6 +230,15 @@ for i in range(1,n+1,1):
         else:
             print(" ",end=" ")
     print(" ")
-
+'''
+n=9
+for i in range(1, n+1):
+    for j in range(1, n+1):
+        if (i==n or i+j==n+1-4 or i==j-4):
+            print("* ", end="")
+        else:
+            print("  ", end="")
+    print()
+'''
 
 

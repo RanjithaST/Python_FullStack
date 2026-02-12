@@ -102,3 +102,134 @@ for i in range(1,n+1,1):
         else:
             print("  ",end=" ")
     print(" ")
+
+'''
+* * * * * * * * *
+*             *
+*           *
+*         *
+*       *
+*     *
+*   *
+* *
+*
+'''
+for i in range(1,n+1,1):
+    for j in range(1,n+1,1):
+        if(i==1 or j==1 or i+j==n+1):
+            print("*",end=" ")
+        else:
+            print(" ",end=" ")
+    print(" ")
+
+'''
+ *  
+              * *  
+            *   *  
+          *     *  
+        *       *  
+      *         *  
+    *           *  
+  *             *  
+* * * * * * * * *  
+
+'''
+for i in range(1,n+1,1):
+    for j in range(1,n+1,1):
+        if(j==n or i==n or i+j==n+1):
+            print("*",end=" ")
+        else:
+            print(" ",end=" ")
+    print(" ")
+
+'''
+* * * * * * * * *
+  *           *
+    *       *
+      *   *
+        *
+      *   *
+    *       *
+  *           *
+* * * * * * * * *
+'''
+for i in range(1,n+1,1):
+    for j in range(1,n+1,1):
+        if(i==1 or i==n or i+j==n+1 or i==j):
+            print("*",end=" ")
+        else:
+            print(" ",end=" ")
+    print(" ")
+
+'''
+*               *
+* *           * *
+*   *       *   *
+*     *   *     *
+*       *       *
+*     *   *     *
+*   *       *   *
+* *           * *
+*               *
+'''
+for i in range(1,n+1,1):
+    for j in range(1,n+1,1):
+        if(j==1 or j==n or i+j==n+1 or i==j):
+            print("*",end=" ")
+        else:
+            print(" ",end=" ")
+    print(" ")
+
+'''
+Diamond pattern
+
+        *
+      *   *
+    *       *
+  *           *
+*               *
+  *           *
+    *       *
+      *   *
+        *
+
+Generalization
+
+cross
+i+j  ==  n+1-4
+1+5(6) ==10-4
+2+4(6)==10-4
+3+3
+4+2
+5+!
+
+i==j+4(LHS==RHS)
+5   1
+6   2
+7   3
+8   4
+9   5
+
+1   5-4=1
+2   6
+3   7
+4   8
+5   9
+
+cross
+5+9(14)   n+1=10=n+1+4
+6+8
+7+7
+8+6
+9+5
+'''
+for i in range(1,n+1,1):
+    for j in range(1,n+1,1):
+        if(i+j==n+1-4 or i==j+4 or i==j-4 or i+j==n+1+4):
+            print("*",end=" ")
+        else:
+            print(" ",end=" ")
+    print(" ")
+
+
+

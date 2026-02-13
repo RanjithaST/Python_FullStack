@@ -115,3 +115,18 @@ print("#########################################################")
 Two sum
 2 numbers=i<j
 '''
+
+'''
+3 sum
+'''
+nums=[-1,0,1,2,-1,-4]
+a=[]
+for i in range(len(nums)):
+            for j in range(i+1,len(nums)):
+                for k in range(j+1,len(nums)):
+                    if(nums[i]+nums[j]+nums[k]==0):
+                       temp = sorted([nums[i],nums[j],nums[k]])  # sort triplet
+                    if temp not in a:   # avoid duplicate
+                         a.append(temp)
+print(a)
+        

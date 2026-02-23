@@ -10,13 +10,19 @@ class DMART:
         print("Actual Price of the product",prodName,"is--->",actualPrice)
     
     @classmethod
-    def revisedPrice(cls):
-        cls.discountOnEachProduct=0.20
+    def revisedPrice(cls,newDiscount):
+        cls.discountOnEachProduct=newDiscount
+    
+    @staticmethod
+    def friskTheCustomer():
+        print("Customer is checked and verified")
 
+print("**********Excecuting static method***********")
+DMART.friskTheCustomer()
 d1=DMART()
 d1.calculatePrice("Cooker",5000)
 d2=DMART()
 d2.calculatePrice("Airfryer",8000)
-DMART.revisedPrice()
+DMART.revisedPrice(0.20)
 d1.calculatePrice("Cooker",5000)
 d2.calculatePrice("Airfryer",8000)

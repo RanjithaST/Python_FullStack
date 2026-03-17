@@ -1,0 +1,268 @@
+Object creation always starts with `__new__`
+When you do:
+```python
+s = Student("Ranjitha", 20)
+```
+
+Python internally does:
+```python
+obj = Student.__new__(Student, "Ranjitha", 20)
+```
+
+* `__new__` creates the **object in memory**
+* This object is **empty** — no attributes yet
+* Memory address is allocated for `obj`
+
+> ✅ At this point, the object exists, but `__dict__` is empty
+
+---
+
+# 2️⃣ Where the parameters live
+
+* `"Ranjitha"` and `20` are **stored temporarily in the call frame** (like a function stack frame)
+* These are **not yet part of the object** — just stored temporarily while the call is being executed
+
+```text
+Call frame → args = ("Ranjitha", 20)
+```
+
+---
+
+# 3️⃣ Python then calls `__init__` (if present)
+
+```python
+Student.__init__(obj, "Ranjitha", 20)
+```
+
+* `self` → the object created by `__new__`
+* `"Ranjitha"` and `20` → taken from the call frame arguments
+* Inside `__init__`:
+
+```python
+self.name = "Ranjitha"
+self.age = 20
+```
+
+* Now the **object’s `__dict__`** contains the attributes:
+
+```python
+obj.__dict__  # {'name': 'Ranjitha', 'age': 20}
+```
+
+> ✅ Object is now fully initialized
+
+---
+
+# 4️⃣ What if `__init__` is not present?
+
+* Python uses **`object.__init__(self)`**
+* `object.__init__` only accepts `self`
+* The parameters are still in the call frame
+* **`__init__` doesn’t read them**, so:
+
+```python
+s = Student("Ranjitha", 20)  # ❌ TypeError
+```
+
+* ✅ Object **was created by `__new__`**, but initialization fails because `object.__init__` can’t accept extra args
+
+---
+
+# 5️⃣ Summary — step-by-step memory & flow
+
+```text
+Call: Student("Ranjitha", 20")
+--------------------------------
+Step 1: __new__(cls, *args)
+  - Creates empty object in memory
+  - obj.__dict__ = {}
+  - Parameters stored in call frame: ("Ranjitha", 20)
+
+Step 2: __init__(self, *args)  # if defined
+  - self → obj
+  - args → ("Ranjitha", 20)
+  - Assign attributes to object
+  - obj.__dict__ now has {'name': 'Ranjitha', 'age': 20}
+
+Step 3: Object ready
+```
+
+* ✅ Parameters **exist before `__init__`** in the call frame
+* ✅ `__init__` uses them to assign values to the object’s attributes
+* ✅ `__new__` always runs first and creates an empty object
+
+---
+
+So your understanding is correct:
+
+> Even without `__init__`, the object is created in memory (empty, with address).
+> Parameters are temporarily in the call frame.
+> If `__init__` is present, Python passes them to `__init__` to initialize the attributes.
+
+---
+
+If you want, I can **draw a neat diagram showing memory, call frame, `__new__`, and `__init__` flow** — it makes this 100% clear visually.
+
+Do you want me to do that?
+
+
+
+Absolutely — let’s go **deep and final on Python decorators**, step by step, including wrappers, execution flow, and why we return functions. I’ll make it **crystal clear** this time. 🐍
+
+---
+
+# 1️⃣ What is a decorator?
+
+* A **decorator** is a **function that takes another function as input** and **returns a new function (usually a wrapper)**.
+* It’s a way to **add extra behavior to a function without changing its code**.
+
+---
+
+# 2️⃣ Basic example
+
+```python id="vnj0pl"
+def decorator(func):
+    def wrapper():
+        print("Before function")
+        func()  # call the original function
+        print("After function")
+    return wrapper
+
+def greet():
+    print("Hello")
+
+greet = decorator(greet)
+greet()
+```
+
+**Output:**
+
+```
+Before function
+Hello
+After function
+```
+
+---
+
+# 3️⃣ Step-by-step execution
+
+1. **`decorator(greet)`** is called
+
+   * `func` → `greet` function
+   * Returns **`wrapper` function** (not called yet)
+
+2. **`greet = decorator(greet)`**
+
+   * Now `greet` points to **`wrapper`**
+
+3. **`greet()` is called**
+
+   * Actually calls `wrapper()`
+   * Inside `wrapper()`, the original `greet()` runs, plus extra code
+
+---
+
+# 4️⃣ Important: `return wrapper` vs `return wrapper()`
+
+| Option             | What happens                                                                                              |
+| ------------------ | --------------------------------------------------------------------------------------------------------- |
+| `return wrapper`   | The **function itself** is returned. It will run only when called later. ✅ Correct for decorators         |
+| `return wrapper()` | The **wrapper is executed immediately**, and its **return value** is returned. ❌ Not what we want usually |
+
+---
+
+# 5️⃣ Using the `@` syntax (syntactic sugar)
+
+```python id="7ezklf"
+def decorator(func):
+    def wrapper():
+        print("Before function")
+        func()
+        print("After function")
+    return wrapper
+
+@decorator
+def greet():
+    print("Hello")
+
+greet()
+```
+
+* `@decorator` is the same as:
+
+```python id="hkuq29"
+greet = decorator(greet)
+```
+
+* Makes code **cleaner and easier to read**
+
+---
+
+# 6️⃣ Decorators with parameters
+
+```python id="wz2fka"
+def decorator(func):
+    def wrapper(*args, **kwargs):
+        print("Before function")
+        result = func(*args, **kwargs)
+        print("After function")
+        return result
+    return wrapper
+
+@decorator
+def add(x, y):
+    return x + y
+
+print(add(5, 10))
+```
+
+* Use `*args, **kwargs` in `wrapper` to accept any parameters of the decorated function
+* `wrapper` can **also return the original function’s return value**
+
+**Output:**
+
+```
+Before function
+After function
+15
+```
+
+---
+
+# 7️⃣ Execution Flow Diagram
+
+```text
+greet()
+↓
+wrapper()  # extra behavior
+↓
+func() → original greet()
+```
+
+* **Decorator only wraps** the function
+* The original function is **never modified**, just “enhanced”
+
+---
+
+# 8️⃣ Why we need wrapper
+
+* Python needs **a new function to run extra code** before/after the original
+* The **wrapper function is that new function**
+* Returning `wrapper` means **Python uses the wrapper as the new function reference**
+
+---
+
+# 9️⃣ Key Takeaways
+
+1. A decorator **takes a function** → adds extra behavior → **returns a function**
+2. Always `return wrapper` (the function), not `wrapper()`
+3. `@decorator` is syntactic sugar for `func = decorator(func)`
+4. Use `*args, **kwargs` in wrapper to handle **any number of arguments**
+5. The original function is **never changed**, only wrapped
+
+---
+
+If you want, I can make a **single diagram showing the flow of a decorator, wrapper, original function, arguments, and return value** — that visually clears all confusion about decorators.
+
+Do you want me to do that?
